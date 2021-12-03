@@ -24,6 +24,16 @@ class Product
     private string $name;
 
     /**
+     * @ORM\Column
+     */
+    private string $brand;
+
+    /**
+     * @ORM\Column
+     */
+    private string $model;
+
+    /**
      * @ORM\Column(type="text")
      */
     private string $description;
@@ -85,6 +95,30 @@ class Product
     public function setPrice(int $price): self
     {
         $this->price = $price;
+
+        return $this;
+    }
+
+    public function getBrand(): string
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(string $brand): self
+    {
+        $this->brand = $brand;
+
+        return $this;
+    }
+
+    public function getModel(): string
+    {
+        return $this->model;
+    }
+
+    public function setModel(string $model): self
+    {
+        $this->model = $model;
 
         return $this;
     }
