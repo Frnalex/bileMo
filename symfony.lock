@@ -103,6 +103,18 @@
     "laminas/laminas-code": {
         "version": "4.4.3"
     },
+    "phpdocumentor/reflection-common": {
+        "version": "2.2.0"
+    },
+    "phpdocumentor/reflection-docblock": {
+        "version": "5.3.0"
+    },
+    "phpdocumentor/type-resolver": {
+        "version": "1.5.1"
+    },
+    "phpstan/phpdoc-parser": {
+        "version": "1.2.0"
+    },
     "psr/cache": {
         "version": "1.0.1"
     },
@@ -114,6 +126,18 @@
     },
     "psr/log": {
         "version": "1.1.4"
+    },
+    "sensio/framework-extra-bundle": {
+        "version": "6.2",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "5.2",
+            "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
+        },
+        "files": [
+            "./config/packages/sensio_framework_extra.yaml"
+        ]
     },
     "symfony/cache": {
         "version": "v5.4.0"
@@ -218,6 +242,12 @@
     "symfony/polyfill-php81": {
         "version": "v1.23.0"
     },
+    "symfony/property-access": {
+        "version": "v5.4.0"
+    },
+    "symfony/property-info": {
+        "version": "v5.4.0"
+    },
     "symfony/proxy-manager-bridge": {
         "version": "v5.4.0"
     },
@@ -237,6 +267,9 @@
     "symfony/runtime": {
         "version": "v5.4.0"
     },
+    "symfony/serializer": {
+        "version": "v5.4.0"
+    },
     "symfony/service-contracts": {
         "version": "v2.5.0"
     },
@@ -254,5 +287,8 @@
     },
     "symfony/yaml": {
         "version": "v5.4.0"
+    },
+    "webmozart/assert": {
+        "version": "1.10.0"
     }
 }
