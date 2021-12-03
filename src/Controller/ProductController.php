@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
 use App\Repository\ProductRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,7 +19,20 @@ class ProductController
     public function collection(ProductRepository $productRepository, SerializerInterface $serializer): JsonResponse
     {
         return new JsonResponse(
-            $serializer->serialize($productRepository->findAll(), 'json'),
+            $serializer->serialize($productRepository->findAll(), 'json', ['groups' => 'getAll']),
+            JsonResponse::HTTP_OK,
+            [],
+            true
+        );
+    }
+
+    /**
+     * @Route("/{id}", name="api_products_item_get", methods={"GET"})
+     */
+    public function item(Product $product, SerializerInterface $serializer): JsonResponse
+    {
+        return new JsonResponse(
+            $serializer->serialize($product, 'json', ['groups' => 'getItem']),
             JsonResponse::HTTP_OK,
             [],
             true

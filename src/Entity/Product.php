@@ -5,6 +5,7 @@ namespace App\Entity;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity
@@ -15,41 +16,49 @@ class Product
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"getAll", "getItem"})
      */
     private ?int $id = null;
 
     /**
      * @ORM\Column
+     * @Groups({"getAll", "getItem"})
      */
     private string $name;
 
     /**
      * @ORM\Column
+     * @Groups({"getItem"})
      */
     private string $brand;
 
     /**
      * @ORM\Column
+     * @Groups({"getItem"})
      */
     private string $model;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"getItem"})
      */
     private string $description;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"getAll", "getItem"})
      */
     private int $price;
 
     /**
      * @ORM\Column
+     * @Groups({"getItem"})
      */
     private string $reference;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups({"getItem"})
      */
     private DateTimeInterface $createdAt;
 
