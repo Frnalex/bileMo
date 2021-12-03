@@ -1,17 +1,46 @@
 <?php
 
+namespace App\Entity;
+
+use DateTimeImmutable;
+use DateTimeInterface;
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity
+ */
 class Product
 {
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
     private ?int $id = null;
 
+    /**
+     * @ORM\Column
+     */
     private string $name;
 
+    /**
+     * @ORM\Column(type="text")
+     */
     private string $description;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
     private int $price;
 
+    /**
+     * @ORM\Column
+     */
     private string $reference;
 
+    /**
+     * @ORM\Column(type="datetime_immutable")
+     */
     private DateTimeInterface $createdAt;
 
     public function __construct()
