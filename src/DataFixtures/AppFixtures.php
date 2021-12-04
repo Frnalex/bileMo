@@ -2,9 +2,12 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Client;
 use App\Entity\Product;
+use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Faker\Factory;
 
 class AppFixtures extends Fixture
 {
@@ -91,6 +94,9 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
+        $faker = Factory::create();
+
+        // Products
         foreach (self::PRODUCTS as $p) {
             $product = new Product();
             $product
@@ -105,6 +111,26 @@ class AppFixtures extends Fixture
             $manager->persist($product);
         }
 
+        $clients = [];
+        for ($c = 0; $c <= 10; ++$c) {
+            $client = new Client();
+            $client->setName("client{$c}");
+            $manager->persist($client);
+            $clients[] = $client;
+        }
+
+        for ($u = 0; $u <= 100; ++$u) {
+            $user = new User();
+
+            $user
+                ->setFirstName($faker->firstName())
+                ->setLastName($faker->lastName())
+                ->setEmail($faker->email())
+                ->setClient($faker->randomElement($clients))
+            ;
+
+            $manager->persist($user);
+        }
         $manager->flush();
     }
 }

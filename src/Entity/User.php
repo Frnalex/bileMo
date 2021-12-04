@@ -5,6 +5,7 @@ namespace App\Entity;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity
@@ -15,33 +16,38 @@ class User
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"getAll", "getItem"})
      */
     private ?int $id = null;
 
     /**
      * @ORM\Column
+     * @Groups({"getAll", "getItem"})
      */
     private string $email;
 
     /**
      * @ORM\Column
-     */
-    private string $password;
-
-    /**
-     * @ORM\Column
+     * @Groups({"getItem"})
      */
     private string $firstName;
 
     /**
      * @ORM\Column
+     * @Groups({"getItem"})
      */
     private string $lastName;
 
     /**
      * @ORM\Column(type="datetime_immutable")
+     * @Groups({"getItem"})
      */
     private DateTimeInterface $createdAt;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="Client")
+     */
+    private Client $client;
 
     public function __construct()
     {
@@ -61,18 +67,6 @@ class User
     public function setEmail(string $email): self
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
 
         return $this;
     }
@@ -109,6 +103,18 @@ class User
     public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getClient(): Client
+    {
+        return $this->client;
+    }
+
+    public function setClient(Client $client): self
+    {
+        $this->client = $client;
 
         return $this;
     }
