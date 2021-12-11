@@ -8,6 +8,7 @@ use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
@@ -92,6 +93,13 @@ class AppFixtures extends Fixture
         ],
     ];
 
+    protected $hasher;
+
+    public function __construct(UserPasswordHasherInterface $hasher)
+    {
+        $this->hasher = $hasher;
+    }
+
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create();
@@ -114,7 +122,8 @@ class AppFixtures extends Fixture
         $clients = [];
         for ($c = 0; $c <= 10; ++$c) {
             $client = new Client();
-            $client->setName("client{$c}");
+            $client->setEmail("client{$c}@gmail.com");
+            $client->setPassword($this->hasher->hashPassword($client, 'password'));
             $manager->persist($client);
             $clients[] = $client;
         }
