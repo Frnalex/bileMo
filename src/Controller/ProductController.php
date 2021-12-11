@@ -14,9 +14,9 @@ use Symfony\Component\Serializer\SerializerInterface;
 class ProductController
 {
     /**
-     * @Route(name="api_products_collection_get", methods={"GET"})
+     * @Route(name="api_products_get_all", methods={"GET"})
      */
-    public function collection(ProductRepository $productRepository, SerializerInterface $serializer): JsonResponse
+    public function getAll(ProductRepository $productRepository, SerializerInterface $serializer): JsonResponse
     {
         return new JsonResponse(
             $serializer->serialize($productRepository->findAll(), 'json', ['groups' => 'getAll']),
@@ -27,9 +27,9 @@ class ProductController
     }
 
     /**
-     * @Route("/{id}", name="api_products_item_get", methods={"GET"})
+     * @Route("/{id}", name="api_products_get_item", methods={"GET"})
      */
-    public function item(Product $product, SerializerInterface $serializer): JsonResponse
+    public function getItem(Product $product, SerializerInterface $serializer): JsonResponse
     {
         return new JsonResponse(
             $serializer->serialize($product, 'json', ['groups' => 'getItem']),
