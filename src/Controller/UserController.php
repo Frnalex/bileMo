@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -34,6 +37,25 @@ class UserController
         return new JsonResponse(
             $serializer->serialize($user, 'json', ['groups' => 'getItem']),
             JsonResponse::HTTP_OK,
+            [],
+            true
+        );
+    }
+
+    /**
+     * @Route("/", name="api_users_create", methods={"POST"})
+     */
+    public function create(Request $request, SerializerInterface $serializer, ClientRepository $clientRepository, EntityManagerInterface $em): JsonResponse
+    {
+        /** @var User $user */
+        $user = $serializer->deserialize($request->getContent(), User::class, 'json');
+        $user->setClient($clientRepository->findOneBy([]));
+        $em->persist($user);
+        $em->flush();
+
+        return new JsonResponse(
+            $serializer->serialize($user, 'json', ['groups' => 'getItem']),
+            JsonResponse::HTTP_CREATED,
             [],
             true
         );
