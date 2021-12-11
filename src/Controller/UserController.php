@@ -60,4 +60,15 @@ class UserController
             true
         );
     }
+
+    /**
+     * @Route("/{id}", name="api_users_delete", methods={"DELETE"})
+     */
+    public function delete(User $user, EntityManagerInterface $em)
+    {
+        $em->remove($user);
+        $em->flush();
+
+        return new JsonResponse(null, JsonResponse::HTTP_NO_CONTENT);
+    }
 }
