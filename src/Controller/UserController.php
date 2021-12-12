@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/users")
@@ -52,11 +53,24 @@ class UserController
         Request $request,
         SerializerInterface $serializer,
         EntityManagerInterface $em,
-        Security $security
+        Security $security,
+        ValidatorInterface $validator
     ): JsonResponse {
         /** @var User $user */
         $user = $serializer->deserialize($request->getContent(), User::class, 'json');
         $user->setClient($security->getUser());
+
+        $errors = $validator->validate($user);
+
+        if ($errors->count() > 0) {
+            return new JsonResponse(
+                $serializer->serialize($errors, 'json'),
+                JsonResponse::HTTP_BAD_REQUEST,
+                [],
+                true
+            );
+        }
+
         $em->persist($user);
         $em->flush();
 

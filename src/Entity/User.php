@@ -6,6 +6,7 @@ use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -23,18 +24,22 @@ class User
     /**
      * @ORM\Column
      * @Groups({"getAll", "getItem"})
+     * @Assert\NotBlank
+     * @Assert\Email
      */
     private string $email;
 
     /**
      * @ORM\Column
      * @Groups({"getItem"})
+     * @Assert\NotBlank
      */
     private string $firstName;
 
     /**
      * @ORM\Column
      * @Groups({"getItem"})
+     * @Assert\NotBlank
      */
     private string $lastName;
 
