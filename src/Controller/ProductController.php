@@ -4,9 +4,10 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Repository\ProductRepository;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/products")
@@ -14,12 +15,12 @@ use Symfony\Component\Serializer\SerializerInterface;
 class ProductController
 {
     /**
-     * @Route(name="api_products_get_all", methods={"GET"})
+     * @Route(name="api_products_get_list", methods={"GET"})
      */
-    public function getAll(ProductRepository $productRepository, SerializerInterface $serializer): JsonResponse
+    public function getList(ProductRepository $productRepository, SerializerInterface $serializer): JsonResponse
     {
         return new JsonResponse(
-            $serializer->serialize($productRepository->findAll(), 'json', ['groups' => 'getAll']),
+            $serializer->serialize($productRepository->findAll(), 'json', SerializationContext::create()->setGroups(['list'])),
             JsonResponse::HTTP_OK,
             [],
             true
@@ -27,12 +28,12 @@ class ProductController
     }
 
     /**
-     * @Route("/{id}", name="api_products_get_item", methods={"GET"})
+     * @Route("/{id}", name="api_products_get_details", methods={"GET"})
      */
-    public function getItem(Product $product, SerializerInterface $serializer): JsonResponse
+    public function getDetails(Product $product, SerializerInterface $serializer): JsonResponse
     {
         return new JsonResponse(
-            $serializer->serialize($product, 'json', ['groups' => 'getItem']),
+            $serializer->serialize($product, 'json', SerializationContext::create()->setGroups(['details'])),
             JsonResponse::HTTP_OK,
             [],
             true

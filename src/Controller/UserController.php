@@ -5,11 +5,13 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\SerializerInterface as SerializerSerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -18,15 +20,21 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class UserController
 {
     /**
-     * @Route("/", name="api_users_get_all", methods={"GET"})
+     * @Route("/", name="api_users_get_list", methods={"GET"})
      */
-    public function getAll(
+    public function getList(
         UserRepository $userRepository,
         SerializerInterface $serializer,
         Security $security
     ): JsonResponse {
+        $data = $serializer->serialize(
+            $userRepository->findBy(['client' => $security->getUser()]),
+            'json',
+            SerializationContext::create()->setGroups(['list'])
+        );
+
         return new JsonResponse(
-            $serializer->serialize($userRepository->findBy(['client' => $security->getUser()]), 'json', ['groups' => 'getAll']),
+            $data,
             JsonResponse::HTTP_OK,
             [],
             true
@@ -34,12 +42,12 @@ class UserController
     }
 
     /**
-     * @Route("/{id}", name="api_users_get_item", methods={"GET"})
+     * @Route("/{id}", name="api_users_get_details", methods={"GET"})
      */
-    public function getItem(User $user, SerializerInterface $serializer): JsonResponse
+    public function getDetails(User $user, SerializerInterface $serializer): JsonResponse
     {
         return new JsonResponse(
-            $serializer->serialize($user, 'json', ['groups' => 'getItem']),
+            $serializer->serialize($user, 'json', SerializationContext::create()->setGroups(['details'])),
             JsonResponse::HTTP_OK,
             [],
             true
@@ -54,10 +62,11 @@ class UserController
         SerializerInterface $serializer,
         EntityManagerInterface $em,
         Security $security,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        SerializerSerializerInterface $serializerInterface
     ): JsonResponse {
         /** @var User $user */
-        $user = $serializer->deserialize($request->getContent(), User::class, 'json');
+        $user = $serializerInterface->deserialize($request->getContent(), User::class, 'json');
         $user->setClient($security->getUser());
 
         $errors = $validator->validate($user);
@@ -75,7 +84,7 @@ class UserController
         $em->flush();
 
         return new JsonResponse(
-            $serializer->serialize($user, 'json', ['groups' => 'getItem']),
+            $serializer->serialize($user, 'json', SerializationContext::create()->setGroups(['details'])),
             JsonResponse::HTTP_CREATED,
             [],
             true
