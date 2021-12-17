@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Repository\ProductRepository;
+use Hateoas\Representation\CollectionRepresentation;
+use Hateoas\Representation\PaginatedRepresentation;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,8 +21,21 @@ class ProductController
      */
     public function getList(ProductRepository $productRepository, SerializerInterface $serializer): JsonResponse
     {
+        $paginatedCollection = new PaginatedRepresentation(
+            new CollectionRepresentation($productRepository->findAll()),
+            'api_products_get_list', // route
+            [], // route parameters
+            1,       // page number
+            5,      // limit
+            3,       // total pages
+            'page',  // page route parameter name, optional, defaults to 'page'
+            'limit', // limit route parameter name, optional, defaults to 'limit'
+            false,   // generate relative URIs, optional, defaults to `false`
+            75       // total collection size, optional, defaults to `null`
+        );
+
         return new JsonResponse(
-            $serializer->serialize($productRepository->findAll(), 'json', SerializationContext::create()->setGroups(['list'])),
+            $serializer->serialize($paginatedCollection, 'json', SerializationContext::create()->setGroups(['list'])),
             JsonResponse::HTTP_OK,
             [],
             true
