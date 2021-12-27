@@ -9,6 +9,7 @@ use Hateoas\Representation\PaginatedRepresentation;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -19,23 +20,26 @@ class ProductController
     /**
      * @Route(name="api_products_get_list", methods={"GET"})
      */
-    public function getList(ProductRepository $productRepository, SerializerInterface $serializer): JsonResponse
+    public function getList(Request $request, ProductRepository $productRepository, SerializerInterface $serializer): JsonResponse
     {
+        $page = $request->query->get('page', 1);
+        $limit = $request->query->get('limit', 5);
+        $offset = $page * $limit - $limit;
+        $totalPages = ceil($productRepository->getTotalRows() / $limit);
+
+        $products = $productRepository->findBy([], [], $limit, $offset);
+
         $paginatedCollection = new PaginatedRepresentation(
-            new CollectionRepresentation($productRepository->findAll()),
-            'api_products_get_list', // route
-            [], // route parameters
-            1,       // page number
-            5,      // limit
-            3,       // total pages
-            'page',  // page route parameter name, optional, defaults to 'page'
-            'limit', // limit route parameter name, optional, defaults to 'limit'
-            false,   // generate relative URIs, optional, defaults to `false`
-            75       // total collection size, optional, defaults to `null`
+            new CollectionRepresentation($products),
+            'api_products_get_list',
+            [],
+            $page,
+            $limit,
+            $totalPages,
         );
 
         return new JsonResponse(
-            $serializer->serialize($paginatedCollection, 'json', SerializationContext::create()->setGroups(['list'])),
+            $serializer->serialize($paginatedCollection, 'json', SerializationContext::create()->setGroups(['list', 'Default'])),
             JsonResponse::HTTP_OK,
             [],
             true
