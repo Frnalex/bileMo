@@ -8,17 +8,46 @@ use Hateoas\Representation\CollectionRepresentation;
 use Hateoas\Representation\PaginatedRepresentation;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
  * @Route("/products")
+ *
+ * @OA\Tag(name="Products")
  */
 class ProductController
 {
     /**
+     * Liste des produits.
+     *
      * @Route(name="api_products_get_list", methods={"GET"})
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="Liste des utilisateurs",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=Product::class, groups={"list"}))
+     *     )
+     * )
+     *
+     * @OA\Parameter(
+     *     name="page",
+     *     in="query",
+     *     description="Le numéro de la page",
+     *     @OA\Schema(type="integer")
+     * )
+     *
+     * @OA\Parameter(
+     *     name="limit",
+     *     in="query",
+     *     description="Le nombre de résultats à afficher",
+     *     @OA\Schema(type="integer")
+     * )
      */
     public function getList(Request $request, ProductRepository $productRepository, SerializerInterface $serializer): JsonResponse
     {
@@ -47,7 +76,22 @@ class ProductController
     }
 
     /**
-     * @Route("/{id}", name="api_products_get_details", methods={"GET"})
+     * Détails d'un produit.
+     *
+     * @Route("/{id}", name="api_products_get_details", requirements={"id"="\d+"}, methods={"GET"})
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="Détails d'un produit",
+     *     @Model(type=Product::class, groups={"details"})
+     * )
+     *
+     * @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="L'id du produit",
+     *     @OA\Schema(type="integer")
+     * )
      */
     public function getDetails(Product $product, SerializerInterface $serializer): JsonResponse
     {

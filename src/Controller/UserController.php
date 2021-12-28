@@ -7,6 +7,8 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,11 +18,24 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/users")
+ *
+ * @OA\Tag(name="Users")
  */
 class UserController
 {
     /**
+     * Liste des utilisateurs.
+     *
      * @Route("/", name="api_users_get_list", methods={"GET"})
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="Liste des utilisateurs",
+     *     @OA\JsonContent(
+     *        type="array",
+     *        @OA\Items(ref=@Model(type=User::class, groups={"list"}))
+     *     )
+     * )
      */
     public function getList(
         UserRepository $userRepository,
@@ -42,7 +57,27 @@ class UserController
     }
 
     /**
+     * Détails d'un utilisateur.
+     *
      * @Route("/{id}", name="api_users_get_details", methods={"GET"})
+     *
+     * @OA\Response(
+     *     response=200,
+     *     description="Details d'un utilisateur",
+     *     @Model(type=User::class, groups={"details"})
+     * )
+     *
+     * @OA\Response(
+     *     response=404,
+     *     description="L'utilisateur n'existe pas",
+     * )
+     *
+     * @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="L'id de l'utilisateur",
+     *     @OA\Schema(type="integer")
+     * )
      */
     public function getDetails(User $user, SerializerInterface $serializer): JsonResponse
     {
@@ -55,7 +90,32 @@ class UserController
     }
 
     /**
+     * Créer un nouvel utilisateur.
+     *
      * @Route("/", name="api_users_create", methods={"POST"})
+     *
+     * @OA\Response(
+     *     response=201,
+     *     description="L'utilisateur qui vient d'être créé",
+     *     @Model(type=User::class, groups={"details"})
+     * )
+     *
+     * @OA\Response(
+     *     response=400,
+     *     description="Les informations envoyées ne sont pas correctes",
+     * )
+     *
+     * @OA\RequestBody(
+     *     required=true,
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *       @OA\Schema(
+     *         @OA\Property(property="email", type="string", format="email", example="john.doe@yopmail.fr"),
+     *         @OA\Property(property="firstname", type="string", example="John"),
+     *         @OA\Property(property="lastname", type="string", example="Doe"),
+     *       )
+     *     )
+     *   )
      */
     public function create(
         Request $request,
@@ -92,7 +152,26 @@ class UserController
     }
 
     /**
+     * Supprimer un utilisateur.
+     *
      * @Route("/{id}", name="api_users_delete", methods={"DELETE"})
+     *
+     * @OA\Response(
+     *     response=204,
+     *     description="no content",
+     * )
+     *
+     * @OA\Response(
+     *     response=404,
+     *     description="L'utilisateur n'existe pas",
+     * )
+     *
+     * @OA\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="L'id de l'utilisateur",
+     *     @OA\Schema(type="integer")
+     * )
      */
     public function delete(User $user, EntityManagerInterface $em)
     {
