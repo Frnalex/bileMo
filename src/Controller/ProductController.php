@@ -28,7 +28,7 @@ class ProductController
      *
      * @OA\Response(
      *     response=200,
-     *     description="Liste des utilisateurs",
+     *     description="Liste des produits",
      *     @OA\JsonContent(
      *        type="array",
      *        @OA\Items(ref=@Model(type=Product::class, groups={"list"}))
@@ -84,6 +84,11 @@ class ProductController
      *     response=200,
      *     description="Détails d'un produit",
      *     @Model(type=Product::class, groups={"details"})
+     * )
+     *
+     * @OA\Response(
+     *     response=404,
+     *     description="Le produit n'existe pas"
      * )
      *
      * @OA\Parameter(
