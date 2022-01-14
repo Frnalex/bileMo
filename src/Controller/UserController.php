@@ -11,6 +11,7 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -69,6 +70,8 @@ class UserController
      *     description="Le nombre de résultats à afficher",
      *     @OA\Schema(type="integer")
      * )
+     *
+     * @Cache(maxage=20)
      */
     public function getList(
         Request $request,
@@ -127,6 +130,8 @@ class UserController
      *     description="L'id de l'utilisateur",
      *     @OA\Schema(type="integer")
      * )
+     *
+     * @Cache(maxage=20)
      */
     public function getDetails(User $user, SerializerInterface $serializer): JsonResponse
     {

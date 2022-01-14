@@ -10,6 +10,7 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -65,6 +66,8 @@ class ProductController
      *     description="Le nombre de résultats à afficher",
      *     @OA\Schema(type="integer")
      * )
+     *
+     * @Cache(maxage=20)
      */
     public function getList(Request $request, ProductRepository $productRepository, SerializerInterface $serializer): JsonResponse
     {
@@ -119,6 +122,8 @@ class ProductController
      *     description="L'id du produit",
      *     @OA\Schema(type="integer")
      * )
+     *
+     * @Cache(maxage=20)
      */
     public function getDetails(Product $product, SerializerInterface $serializer): JsonResponse
     {
