@@ -27,12 +27,29 @@ class ProductController
      * @Route(name="api_products_get_list", methods={"GET"})
      *
      * @OA\Response(
-     *     response=200,
-     *     description="Liste des produits",
-     *     @OA\JsonContent(
-     *        type="array",
-     *        @OA\Items(ref=@Model(type=Product::class, groups={"list"}))
-     *     )
+     *      response=200,
+     *      description="Liste des produits",
+     *      @OA\JsonContent(
+     *          @OA\Property(property="page", description="Page courante", type="integer"),
+     *          @OA\Property(property="limit", description="Nombre de produits par page", type="integer"),
+     *          @OA\Property(property="pages", description="Nombre total de pages", type="integer"),
+     *          @OA\Property(property="_links",
+     *              @OA\Property(property="self", @OA\Property(property="href", type="string")),
+     *              @OA\Property(property="first", @OA\Property(property="href", type="string")),
+     *              @OA\Property(property="last", @OA\Property(property="href", type="string")),
+     *              @OA\Property(property="next", @OA\Property(property="href", type="string")),
+     *          ),
+     *          @OA\Property(property="_embedded",
+     *              @OA\Property(property="items",type="array",
+     *                  @OA\Items(ref=@Model(type=Product::class, groups={"list"}))
+     *              )
+     *          )
+     *      )
+     * )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="Le token est manquant ou n'est pas valide"
      * )
      *
      * @OA\Parameter(
@@ -54,7 +71,7 @@ class ProductController
         $page = $request->query->get('page', 1);
         $limit = $request->query->get('limit', 5);
         $offset = $page * $limit - $limit;
-        $totalPages = ceil($productRepository->getTotalRows() / $limit);
+        $totalPages = ceil($productRepository->count([]) / $limit);
 
         $products = $productRepository->findBy([], [], $limit, $offset);
 
@@ -89,6 +106,11 @@ class ProductController
      * @OA\Response(
      *     response=404,
      *     description="Le produit n'existe pas"
+     * )
+     *
+     * @OA\Response(
+     *     response=401,
+     *     description="Le token est manquant ou n'est pas valide"
      * )
      *
      * @OA\Parameter(
