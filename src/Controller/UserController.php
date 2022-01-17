@@ -11,7 +11,7 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +24,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  *
  * @OA\Tag(name="Users")
  */
-class UserController
+class UserController extends AbstractController
 {
     /**
      * Liste des utilisateurs.
@@ -70,8 +70,6 @@ class UserController
      *     description="Le nombre de résultats à afficher",
      *     @OA\Schema(type="integer")
      * )
-     *
-     * @Cache(maxage=20)
      */
     public function getList(
         Request $request,
@@ -130,11 +128,15 @@ class UserController
      *     description="L'id de l'utilisateur",
      *     @OA\Schema(type="integer")
      * )
-     *
-     * @Cache(maxage=20)
      */
-    public function getDetails(User $user, SerializerInterface $serializer): JsonResponse
+    public function getDetails(User $user, SerializerInterface $serializer, Security $security): JsonResponse
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        if ($user->getClient() !== $security->getUser()) {
+            throw $this->createAccessDeniedException("Vous n'avez pas accès aux détails de cet utilisateur");
+        }
+
         return new JsonResponse(
             $serializer->serialize($user, 'json', SerializationContext::create()->setGroups(['details'])),
             JsonResponse::HTTP_OK,

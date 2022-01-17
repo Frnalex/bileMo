@@ -12,6 +12,8 @@ class UserControllerTest extends AbstractTestController
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/users');
 
+        // dd($client->getResponse()->getContent());
+
         $this->assertResponseStatusCodeSame(JsonResponse::HTTP_OK);
     }
 
@@ -29,6 +31,14 @@ class UserControllerTest extends AbstractTestController
         $client->request('GET', '/api/users/42');
 
         $this->assertResponseStatusCodeSame(JsonResponse::HTTP_OK);
+    }
+
+    public function testGetUserDetailsFromAnotherClient()
+    {
+        $client = $this->createAuthenticatedClient();
+        $client->request('GET', '/api/users/30');
+
+        $this->assertResponseStatusCodeSame(JsonResponse::HTTP_FORBIDDEN);
     }
 
     public function testGetUserDetailsNotFound()
@@ -51,9 +61,6 @@ class UserControllerTest extends AbstractTestController
         $client->request('POST', 'https://localhost:8000/api/users/', [], [], [], $newUser);
 
         $this->assertResponseStatusCodeSame(JsonResponse::HTTP_CREATED);
-
-        $data = json_decode($client->getResponse()->getContent(), true);
-        $this->newUserId = $data['id'];
     }
 
     public function testCreateUserWithWrongContent()
