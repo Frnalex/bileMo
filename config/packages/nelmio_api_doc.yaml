@@ -1,0 +1,48 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: BileMo
+            # description: This is an awesome app!
+            version: 1.0.0
+        tags:
+            - name: "Login"
+        paths:
+            /api/login_check:
+                post:
+                    tags: ["Login"]
+                    description: Login.
+                    requestBody:
+                        required: true
+                        content:
+                            "application/json":
+                                schema:
+                                    type: object
+                                    properties:
+                                        username:
+                                            type: string
+                                        password:
+                                            type: string
+                    responses:
+                        "200":
+                            description: Token JWT.
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            token:
+                                                type: string
+                        "401":
+                            description: Identifiants incorrects.
+        components:
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+        security:
+            - Bearer: []
+    areas: # to filter documented areas
+        path_patterns: # an array of regexps
+            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+

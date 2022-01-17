@@ -116,6 +116,9 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     {
     }
 
+    /**
+     * @return string
+     */
     public function getUsername()
     {
         // deprecated

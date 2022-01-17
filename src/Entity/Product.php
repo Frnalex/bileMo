@@ -5,10 +5,23 @@ namespace App\Entity;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
+use Hateoas\Configuration\Annotation as Hateoas;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity
+ *
+ * @Hateoas\Relation(
+ *     "self",
+ *     href = @Hateoas\Route("api_products_get_details", parameters = {"id" = "expr(object.getId())"}, absolute = true),
+ *     exclusion = @Hateoas\Exclusion(groups={"details","list"}),
+ * )
+ *
+ * @Hateoas\Relation(
+ *     "list",
+ *     href = @Hateoas\Route("api_products_get_list", absolute = true),
+ *     exclusion = @Hateoas\Exclusion(groups={"details"}),
+ * )
  */
 class Product
 {
@@ -16,49 +29,49 @@ class Product
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"getAll", "getItem"})
+     * @Serializer\Groups({"details", "list"})
      */
     private ?int $id = null;
 
     /**
      * @ORM\Column
-     * @Groups({"getAll", "getItem"})
+     * @Serializer\Groups({"details", "list"})
      */
     private string $name;
 
     /**
      * @ORM\Column
-     * @Groups({"getItem"})
+     * @Serializer\Groups({"details"})
      */
     private string $brand;
 
     /**
      * @ORM\Column
-     * @Groups({"getItem"})
+     * @Serializer\Groups({"details"})
      */
     private string $model;
 
     /**
      * @ORM\Column(type="text")
-     * @Groups({"getItem"})
+     * @Serializer\Groups({"details"})
      */
     private string $description;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"getAll", "getItem"})
+     * @Serializer\Groups({"details", "list"})
      */
     private int $price;
 
     /**
      * @ORM\Column
-     * @Groups({"getItem"})
+     * @Serializer\Groups({"details"})
      */
     private string $reference;
 
     /**
      * @ORM\Column(type="datetime_immutable")
-     * @Groups({"getItem"})
+     * @Serializer\Groups({"details"})
      */
     private DateTimeInterface $createdAt;
 

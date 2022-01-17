@@ -1,0 +1,75 @@
+{
+    "page": 1,
+    "limit": 5,
+    "pages": 14,
+    "_links": {
+        "self": { "href": "/api/users/?page=1&limit=5" },
+        "first": { "href": "/api/users/?page=1&limit=5" },
+        "last": { "href": "/api/users/?page=14&limit=5" },
+        "next": { "href": "/api/users/?page=2&limit=5" }
+    },
+    "_embedded": {
+        "items": [
+            {
+                "id": 42,
+                "email": "josh.denesik@yahoo.com",
+                "client": {
+                    "id": 1,
+                    "email": "client0@gmail.com",
+                    "password": "$2y$13$BNnEnZLuadSygFKmyGoivuPSAk94/AjV8Zw9ubNyDdu5Teq1T1poy",
+                    "roles": [],
+                    "created_at": "2021-12-11T18:55:04+00:00"
+                },
+                "_links": { "self": { "href": "http://localhost/api/users/42" }, "delete": { "href": "http://localhost/api/users/42" } }
+            },
+            {
+                "id": 60,
+                "email": "swaniawski.ronaldo@bayer.com",
+                "client": {
+                    "id": 1,
+                    "email": "client0@gmail.com",
+                    "password": "$2y$13$BNnEnZLuadSygFKmyGoivuPSAk94/AjV8Zw9ubNyDdu5Teq1T1poy",
+                    "roles": [],
+                    "created_at": "2021-12-11T18:55:04+00:00"
+                },
+                "_links": { "self": { "href": "http://localhost/api/users/60" }, "delete": { "href": "http://localhost/api/users/60" } }
+            },
+            {
+                "id": 66,
+                "email": "vparisian@fisher.com",
+                "client": {
+                    "id": 1,
+                    "email": "client0@gmail.com",
+                    "password": "$2y$13$BNnEnZLuadSygFKmyGoivuPSAk94/AjV8Zw9ubNyDdu5Teq1T1poy",
+                    "roles": [],
+                    "created_at": "2021-12-11T18:55:04+00:00"
+                },
+                "_links": { "self": { "href": "http://localhost/api/users/66" }, "delete": { "href": "http://localhost/api/users/66" } }
+            },
+            {
+                "id": 67,
+                "email": "phudson@gmail.com",
+                "client": {
+                    "id": 1,
+                    "email": "client0@gmail.com",
+                    "password": "$2y$13$BNnEnZLuadSygFKmyGoivuPSAk94/AjV8Zw9ubNyDdu5Teq1T1poy",
+                    "roles": [],
+                    "created_at": "2021-12-11T18:55:04+00:00"
+                },
+                "_links": { "self": { "href": "http://localhost/api/users/67" }, "delete": { "href": "http://localhost/api/users/67" } }
+            },
+            {
+                "id": 68,
+                "email": "treutel.kendall@bergstrom.org",
+                "client": {
+                    "id": 1,
+                    "email": "client0@gmail.com",
+                    "password": "$2y$13$BNnEnZLuadSygFKmyGoivuPSAk94/AjV8Zw9ubNyDdu5Teq1T1poy",
+                    "roles": [],
+                    "created_at": "2021-12-11T18:55:04+00:00"
+                },
+                "_links": { "self": { "href": "http://localhost/api/users/68" }, "delete": { "href": "http://localhost/api/users/68" } }
+            }
+        ]
+    }
+}
