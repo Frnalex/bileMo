@@ -13,8 +13,8 @@
 
 Lorsque votre serveur de dev est en route, vous pouvez accéder à la documentation sous cet url : [https://localhost:8000/api/doc](https://localhost:8000/api/doc)
 
-[Lien vers le code climate du projet](https://codeclimate.com/github/Frnalex/bileMo)
-
 ## Tests :
 
 Pour vérifier que l'api fonctionne correctement, vous pouvez lancer la commande de tests: `php bin/phpunit `
+
+[Lien vers le code climate du projet](https://codeclimate.com/github/Frnalex/bileMo)
