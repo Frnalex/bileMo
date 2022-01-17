@@ -1,4 +1,4 @@
-# PHP - P6 Openclassrooms - Développez de A à Z le site communautaire SnowTricks
+# PHP - P7 Openclassrooms - Créez un web service exposant une API
 
 ## Installation :
 
