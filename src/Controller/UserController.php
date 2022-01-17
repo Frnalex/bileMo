@@ -131,10 +131,8 @@ class UserController extends AbstractController
      */
     public function getDetails(User $user, SerializerInterface $serializer, Security $security): JsonResponse
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
-
         if ($user->getClient() !== $security->getUser()) {
-            throw $this->createAccessDeniedException("Vous n'avez pas accès aux détails de cet utilisateur");
+            throw $this->createAccessDeniedException("Vous n'avez pas accès à cet utilisateur");
         }
 
         return new JsonResponse(
@@ -239,8 +237,12 @@ class UserController extends AbstractController
      *     @OA\Schema(type="integer")
      * )
      */
-    public function delete(User $user, EntityManagerInterface $em)
+    public function delete(User $user, EntityManagerInterface $em, Security $security)
     {
+        if ($user->getClient() !== $security->getUser()) {
+            throw $this->createAccessDeniedException("Vous n'avez pas accès à cet utilisateur");
+        }
+
         $em->remove($user);
         $em->flush();
 

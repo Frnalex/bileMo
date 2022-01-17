@@ -122,8 +122,6 @@ class ProductController
      */
     public function getDetails(Product $product, SerializerInterface $serializer): JsonResponse
     {
-        dd($product);
-
         return new JsonResponse(
             $serializer->serialize($product, 'json', SerializationContext::create()->setGroups(['details'])),
             JsonResponse::HTTP_OK,
