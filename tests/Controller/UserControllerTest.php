@@ -12,8 +12,6 @@ class UserControllerTest extends AbstractTestController
         $client = $this->createAuthenticatedClient();
         $client->request('GET', '/api/users');
 
-        // dd($client->getResponse()->getContent());
-
         $this->assertResponseStatusCodeSame(JsonResponse::HTTP_OK);
     }
 
@@ -28,7 +26,10 @@ class UserControllerTest extends AbstractTestController
     public function testGetUserDetails()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/users/42');
+        $em = $client->getContainer()->get('doctrine.orm.entity_manager');
+        $user = $em->getRepository(User::class)->findOneBy(['client' => 1], null);
+
+        $client->request('GET', 'https://localhost:8000/api/users/'.$user->getId());
 
         $this->assertResponseStatusCodeSame(JsonResponse::HTTP_OK);
     }
@@ -36,7 +37,10 @@ class UserControllerTest extends AbstractTestController
     public function testGetUserDetailsFromAnotherClient()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('GET', '/api/users/30');
+        $em = $client->getContainer()->get('doctrine.orm.entity_manager');
+        $user = $em->getRepository(User::class)->findOneBy(['client' => 2], null);
+
+        $client->request('GET', 'https://localhost:8000/api/users/'.$user->getId());
 
         $this->assertResponseStatusCodeSame(JsonResponse::HTTP_FORBIDDEN);
     }
@@ -79,7 +83,7 @@ class UserControllerTest extends AbstractTestController
     {
         $client = $this->createAuthenticatedClient();
         $em = $client->getContainer()->get('doctrine.orm.entity_manager');
-        $user = $em->getRepository(User::class)->findOneBy([], null);
+        $user = $em->getRepository(User::class)->findOneBy(['client' => 1], null);
 
         $client->request('DELETE', 'https://localhost:8000/api/users/'.$user->getId());
         $this->assertResponseStatusCodeSame(JsonResponse::HTTP_NO_CONTENT);
@@ -88,7 +92,7 @@ class UserControllerTest extends AbstractTestController
     public function testDeleteUserNotFound()
     {
         $client = $this->createAuthenticatedClient();
-        $client->request('DELETE', 'https://localhost:8000/api/users/2');
+        $client->request('DELETE', 'https://localhost:8000/api/users/9999');
         $this->assertResponseStatusCodeSame(JsonResponse::HTTP_NOT_FOUND);
     }
 }
