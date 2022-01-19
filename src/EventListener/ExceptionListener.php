@@ -14,8 +14,7 @@ class ExceptionListener
         $exception = $event->getThrowable();
 
         $message = [
-            'exception code' => $exception->getCode(),
-            'status code' => $exception->getStatusCode(),
+            'code' => $exception->getStatusCode(),
             'message' => $exception->getMessage(),
         ];
 
