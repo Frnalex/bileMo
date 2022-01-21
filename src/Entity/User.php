@@ -70,6 +70,7 @@ class User
 
     /**
      * @ORM\ManyToOne(targetEntity="Client")
+     * @Serializer\Groups({""})
      */
     private Client $client;
 

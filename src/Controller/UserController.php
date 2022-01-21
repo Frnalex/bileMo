@@ -83,7 +83,6 @@ class UserController extends AbstractController
         $totalPages = ceil($userRepository->count(['client' => $security->getUser()]) / $limit);
 
         $users = $userRepository->findBy(['client' => $security->getUser()], [], $limit, $offset);
-
         $paginatedCollection = new PaginatedRepresentation(
             new CollectionRepresentation($users),
             'api_users_get_list',
